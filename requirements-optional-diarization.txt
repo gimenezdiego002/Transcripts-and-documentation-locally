@@ -1,0 +1,2 @@
+# Install only when you have a compatible pyannote model downloaded locally.
+pyannote.audio>=3.3,<5

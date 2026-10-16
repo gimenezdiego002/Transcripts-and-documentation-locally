@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  * { @apply border-line; }
+  html { color-scheme: dark; }
+  body { @apply m-0 bg-canvas font-sans text-zinc-100 antialiased; }
+  button, input, textarea, select { font: inherit; }
+  ::selection { background: rgba(124, 111, 242, .35); }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { @apply bg-canvas; }
+  ::-webkit-scrollbar-thumb { @apply rounded-full border-2 border-solid border-canvas bg-zinc-700; }
+}
+
+@layer components {
+  .panel { @apply rounded-xl border border-line bg-panel; }
+  .btn { @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-line px-3.5 py-2 text-sm font-medium text-zinc-200 transition duration-150 hover:border-zinc-600 hover:bg-lifted focus:outline-none focus:ring-2 focus:ring-accent/60 disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply border-accent bg-accent text-white hover:border-[#9187f6] hover:bg-[#9187f6]; }
+  .icon-btn { @apply inline-flex size-10 items-center justify-center rounded-lg border border-transparent text-zinc-400 transition hover:border-line hover:bg-lifted hover:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-accent/60; }
+  .field { @apply min-h-10 w-full rounded-lg border border-line bg-lifted px-3 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-accent focus:ring-2 focus:ring-accent/20; }
+  .label { @apply mb-2 block text-xs font-medium uppercase tracking-[.08em] text-zinc-500; }
+  .eyebrow { @apply text-xs font-semibold uppercase tracking-[.1em] text-zinc-500; }
+  .status { @apply inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}
+
