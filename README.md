@@ -22,7 +22,7 @@ Speaker diarization is capability-gated: no model is bundled, and the app does n
 Requirements:
 
 - Windows 10 or 11
-- Python 3.11+
+- Python 3.11, 3.12, or 3.13
 - Node.js 20+
 - Enough local disk space for files and Whisper models
 

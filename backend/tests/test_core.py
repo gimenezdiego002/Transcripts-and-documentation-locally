@@ -2,6 +2,7 @@ from pathlib import Path
 from time import monotonic, sleep
 
 from app.jobs import JobManager
+from app.extractors import extract_document
 from app.organizer import generate_master
 from app.storage import WorkspaceStore, atomic_write_text
 
@@ -82,4 +83,36 @@ def test_archived_ids_are_not_reused(tmp_path: Path):
         next_source, _ = store.import_stream(second.name, handle)
     assert next_source is not None
     assert next_source.source_id == "SRC_0002"
+
+
+def test_docx_and_pdf_extraction(tmp_path: Path):
+    import fitz
+    from docx import Document
+
+    docx_path = tmp_path / "requirements.docx"
+    document = Document()
+    document.add_heading("Project Requirements", level=1)
+    document.add_paragraph("Keep all source files local.")
+    table = document.add_table(rows=2, cols=2)
+    table.cell(0, 0).text = "Owner"
+    table.cell(0, 1).text = "Status"
+    table.cell(1, 0).text = "Diego"
+    table.cell(1, 1).text = "Approved"
+    document.save(docx_path)
+
+    docx_result = extract_document(docx_path)
+    assert "# Project Requirements" in docx_result.markdown
+    assert "Keep all source files local." in docx_result.markdown
+    assert "| Owner | Status |" in docx_result.markdown
+
+    pdf_path = tmp_path / "meeting.pdf"
+    pdf = fitz.open()
+    page = pdf.new_page()
+    page.insert_text((72, 72), "Meeting decision: retain original recordings.")
+    pdf.save(pdf_path)
+    pdf.close()
+
+    pdf_result = extract_document(pdf_path)
+    assert "## Page 1" in pdf_result.markdown
+    assert "retain original recordings" in pdf_result.markdown
 

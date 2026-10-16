@@ -6,8 +6,13 @@ echo.
 echo  Local Knowledge Studio - setup
 echo  --------------------------------
 
-where python >nul 2>nul || (
-  echo Python 3.11 or newer was not found. Install it from https://python.org and enable "Add Python to PATH".
+set "PYTHON_CMD="
+py -3.13 -c "import sys" >nul 2>nul && set "PYTHON_CMD=py -3.13"
+if not defined PYTHON_CMD py -3.12 -c "import sys" >nul 2>nul && set "PYTHON_CMD=py -3.12"
+if not defined PYTHON_CMD py -3.11 -c "import sys" >nul 2>nul && set "PYTHON_CMD=py -3.11"
+if not defined PYTHON_CMD (
+  echo A compatible Python was not found. Install Python 3.11, 3.12, or 3.13 from https://python.org.
+  echo During installation, enable "Python Launcher" and "Add Python to PATH".
   exit /b 1
 )
 
@@ -18,7 +23,7 @@ where npm >nul 2>nul || (
 
 if not exist ".venv\Scripts\python.exe" (
   echo [1/4] Creating the local Python environment...
-  python -m venv .venv || exit /b 1
+  %PYTHON_CMD% -m venv .venv || exit /b 1
 ) else (
   echo [1/4] Python environment already exists.
 )

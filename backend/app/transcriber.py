@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -31,6 +32,10 @@ def transcribe_audio(
     diarization_model_path: str = "",
     progress: Callable[[int, str], None] | None = None,
 ) -> TranscriptionResult:
+    # The optimized Xet transport can stall behind corporate proxies. Standard HTTPS is
+    # slower but substantially more reliable for the one-time local model download.
+    os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
+    os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
     try:
         from faster_whisper import WhisperModel
     except ImportError as exc:
